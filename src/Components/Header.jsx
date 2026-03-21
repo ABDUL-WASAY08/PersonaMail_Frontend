@@ -1,7 +1,18 @@
 import React from "react";
-import { Mail, Menu, X } from 'lucide-react';
-
-function Header({ scrolled, isMenuOpen, setIsMenuOpen, scrollToSection, featuresRef, pricingRef, aboutRef }) {
+import { Mail, Menu, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import Userstore from "../Store/useUserStore";
+function Header({
+  scrolled,
+  isMenuOpen,
+  setIsMenuOpen,
+  scrollToSection,
+  featuresRef,
+  pricingRef,
+  aboutRef,
+}) {
+  const navigate = useNavigate();
+  const { isAuthenticated, logout } = Userstore();
   return (
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
@@ -10,7 +21,7 @@ function Header({ scrolled, isMenuOpen, setIsMenuOpen, scrollToSection, features
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 cursor-pointer" onClick={"/"}>
             <Mail className="w-8 h-8 text-blue-600" />
             <span className="text-xl font-semibold text-gray-900">
               Persona<span className="text-blue-600">Mail</span>
@@ -35,8 +46,18 @@ function Header({ scrolled, isMenuOpen, setIsMenuOpen, scrollToSection, features
             >
               About
             </button>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full text-sm font-medium transition shadow-lg shadow-blue-500/25">
-              Get Started
+            <button
+              className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full text-sm font-medium transition shadow-lg shadow-blue-500/25"
+              onClick={() => {
+                if (!isAuthenticated) {
+                  navigate("/Authorization");
+                } else {
+                  logout();
+                  navigate("/Authorization");
+                }
+              }}
+            >
+              {isAuthenticated ? "Signout" : "Registration"}
             </button>
           </div>
           <button
@@ -81,8 +102,18 @@ function Header({ scrolled, isMenuOpen, setIsMenuOpen, scrollToSection, features
             >
               About
             </button>
-            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl text-sm font-medium">
-              Get Started
+            <button
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl text-sm font-medium"
+              onClick={() => {
+                if (!isAuthenticated) {
+                  navigate("/Authorization");
+                } else {
+                  logout();
+                  navigate("/Authorization");
+                }
+              }}
+            >
+              {isAuthenticated ? "Signout" : "Registration"}
             </button>
           </div>
         </div>

@@ -21,6 +21,9 @@ import {
   ChevronRight,
 } from "lucide-react";
 import Header from "../Components/Header";
+import Userstore from "../Store/useUserStore";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const LandingScreen = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,7 +31,8 @@ const LandingScreen = () => {
   const featuresRef = useRef(null);
   const pricingRef = useRef(null);
   const aboutRef = useRef(null);
-
+  const { isAuthenticated } = Userstore();
+  const navigate = useNavigate();
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -215,7 +219,16 @@ const LandingScreen = () => {
       popular: true,
     },
   ];
+  const handleTrailSubmit = () => {
+    if (!isAuthenticated) {
+      toast.error("Please login first to connect Instagram");
+      navigate("/Authorization");
+      return;
+    }
 
+    toast.success("Setup your Instagram...");
+    navigate("/InstaSetUp");
+  };
   return (
     <div className="min-h-screen bg-white font-sans">
       <Header
@@ -235,7 +248,6 @@ const LandingScreen = () => {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* navigation  */}
             <div>
               <div className="inline-flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-full mb-6">
                 <Sparkles className="w-4 h-4 text-blue-600" />
@@ -254,8 +266,10 @@ const LandingScreen = () => {
                 your style, automates responses, and grows your business while
                 you sleep.
               </p>
-                {/* navigation is here  */}
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div
+                className="flex flex-col sm:flex-row gap-4"
+                onClick={handleTrailSubmit}
+              >
                 <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl text-lg font-medium transition shadow-xl shadow-blue-500/25 flex items-center justify-center gap-2 group">
                   Start Free Trial
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition" />
@@ -788,7 +802,7 @@ const LandingScreen = () => {
         </div>
       </footer>
 
-      <style jsx>{`
+      <style jsx="true">{`
         @keyframes blob {
           0% {
             transform: translate(0px, 0px) scale(1);
